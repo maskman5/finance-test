@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>stock price</title>
+</head>
+<body>
+    <h2>오늘의 미국 경제 상황</h2>
+    <h3>물가</h3>
+    <p id="cpi"></p>
+    <h3>경제</h3>
+    <p id="eco"></p>
+    <h2>오늘의 주가</h2>
+    <input id='ticker' type="text" value="">
+    <button onclick="getPrice()">주가 가져오기</button>
+    <p id="price"></p>
+    <h2>경제 상황별 자산 배분</h2>
+    <input id='condition' type="text" value="">
+    <button onclick="getAsset()">자산 배분</button>
+    <p id="asset"></p>
+    <script>
+        // 경제 상황 데이터 display
+        if (1) {
+            document.getElementById("cpi").innerHTML = '상승'
+        } else {
+            document.getElementById("cpi").innerHTML = '하락'
+        }
+        if (1) {
+            document.getElementById("eco").innerHTML = '상승'
+        } else {
+            document.getElementById("eco").innerHTML = '하락'
+        }
+        // 개별 주가 display
+        API_KEY = '03b068e9f24b45c68b107c2942c8f3e5';
+        function getPrice() {
+            let ticker = document.getElementById("ticker").value;
+            fetch('https://api.twelvedata.com/time_series?apikey=' + API_KEY + '&symbol=' + ticker + '&interval=1day&format=JSON&outputsize=1&dp=2')
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById("price").innerHTML =
+                data["values"][0]["close"]
+            });
+        }
+        // 경제 상황별 자산
+        function getAsset() {
+            let condition = document.getElementById("condition").value;
+            fetch(`http://localhost:3000/asset/${condition}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                document.getElementById("condition").innerHTML = data
+            });
+        }
+    </script>
+</body>
+</html>
